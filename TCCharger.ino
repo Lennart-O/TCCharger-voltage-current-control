@@ -1,3 +1,5 @@
+//Code von Lennart O.
+
 //Bibliotheken einbinden
 
 #include <mcp_can.h> 
