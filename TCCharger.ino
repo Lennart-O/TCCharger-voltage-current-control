@@ -30,6 +30,11 @@ SimpleTimer timer1; //timer Objekt erzeugen
 
 //Funktionen
 
+/************************************************
+** Function name:           canRead
+** Descriptions:            read CAN message
+*************************************************/
+
 void canRead(){
 
   if(CAN_MSGAVAIL == CAN.checkReceive()){ //auf Nachrichten prüfen
@@ -84,6 +89,11 @@ void canRead(){
 
 }
 
+/************************************************
+** Function name:           canWrite
+** Descriptions:            write CAN message
+*************************************************/
+
 String canWrite(unsigned char data[8], unsigned long int id){
 
   byte sndStat = CAN.sendMsgBuf(id, 1, 8, data); //Nachricht senden (ID, extended Frame, Datenlänge, Daten)
@@ -95,16 +105,63 @@ String canWrite(unsigned char data[8], unsigned long int id){
 
 }
 
-void myTimer1() { //zyklisch vom Timer aufgerufene Funktion
+/************************************************
+** Function name:           setVoltage
+** Descriptions:            set target voltage
+*************************************************/
+
+void setVoltage(int t_voltage) { //can be used to set desired voltage to i.e. 80% SOC
+
+  if(t_voltage >= 980 && t_voltage <= 1164){
+    
+    outputvoltage = t_voltage;
+    
+  }
+
+ }
+
+/************************************************
+** Function name:           setCurrent
+** Descriptions:            set target current
+*************************************************/
+
+void setCurrent(int t_current) { //can be used to reduce or adjust charging speed
+
+  if(t_current >= 0 && t_current <= 320){
+    
+    outputcurrent = t_current;
+    
+  }
+
+ }
+
+/************************************************
+** Function name:           readPoti
+** Descriptions:            read poti to adjust current
+*************************************************/
+
+void readPoti() {
 
   poti = analogRead(POTI); //Wert vom Poti einlesen
-  outputcurrent = 320.0*(poti/800.0); //keine 1024 erreicht, daher 800
+  int current = (int) (320.0*(poti/850.0)) //keine 1024 erreicht, daher 850
+    
+  if(current > 320){
 
-  if(outputcurrent > 320.0){
+   current = 320; //begrenze auf 320 falls Ergebnis größer ist
 
-    outputcurrent = 320.0; //begrenze auf 320 falls Ergebnis größer ist
+  }  
+ 
+  setCurrent(current); 
 
-  }
+ }
+
+/************************************************
+** Function name:           myTimer1
+** Descriptions:            function of timer1
+*************************************************/
+
+void myTimer1() { //zyklisch vom Timer aufgerufene Funktion
+
 
   Serial.print("Eingestellter Ladestrom: ");
   Serial.print((float)outputcurrent/10.0); //Current setpoint ausgeben
@@ -116,6 +173,11 @@ void myTimer1() { //zyklisch vom Timer aufgerufene Funktion
   Serial.println(); //Absatz
 
 }
+
+/************************************************
+** Function name:           setup
+** Descriptions:            Arduino setup
+*************************************************/
 
 void setup() {
 
@@ -133,6 +195,11 @@ void setup() {
   timer1.setInterval(950, myTimer1); //Zeit und Funktion des Timers definieren
 
 }
+
+/************************************************
+** Function name:           loop
+** Descriptions:            Arduino loop
+*************************************************/
 
 void loop() {
 
