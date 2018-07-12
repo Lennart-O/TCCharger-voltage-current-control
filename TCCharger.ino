@@ -162,14 +162,15 @@ void readPoti() {
 
 void myTimer1() { //zyklisch vom Timer aufgerufene Funktion
 
-
   Serial.print("Eingestellter Ladestrom: ");
   Serial.print((float)outputcurrent/10.0); //Current setpoint ausgeben
   Serial.println(" A");
+  
   unsigned char voltamp[8] = {highByte(outputvoltage), lowByte(outputvoltage), highByte(outputcurrent), lowByte(outputcurrent), 0x00,0x00,0x00,0x00}; //Nachricht neu generieren
-
   Serial.println(canWrite(voltamp, sendId)); //Nachricht senden und Ergebnis ausgeben
+  
   canRead(); //Lesefunktion aufrufen
+  
   Serial.println(); //Absatz
 
 }
