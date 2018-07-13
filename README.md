@@ -24,6 +24,9 @@ https://www.banggood.com/3Pcs-ATmega328P-Nano-V3-Controller-Board-Compatible-Ard
 CAN-Bus Interfaces:
 https://www.amazon.de/gp/product/B01IV3ZSKO
 
+Alternativ funktioniert auch das Leonardo-Board von Hobbytronics sehr gut, dann reduziert sich auch die Lötarbeit:
+http://www.hobbytronics.co.uk/leonardo-canbus
+
 Zusätzlich wird folgendes benötigt:
 -Lötkolben
 -dünne Kabel
